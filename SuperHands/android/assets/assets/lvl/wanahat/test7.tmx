@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="blocks" tilewidth="32" tileheight="32">
+  <image source="blocks.png" width="96" height="32"/>
+ </tileset>
+ <tileset firstgid="4" name="platformertiles" tilewidth="32" tileheight="32">
+  <image source="platformertiles.png" width="256" height="96"/>
+ </tileset>
+ <layer name="red" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztlskKwzAMRHVoCyVNoHT5/0+tTSMiQomQPYI0zMBADtbybOxoFJHxIL4Xvxw/wOt6Y2ysckzi6wZe1xtjY8mB7YkcIk/53pN/51ChOer+vIM97JGjReRYRA6cyLHI4zgVn4uH4uv8XX3prGvVwqF9qT0O/c+sHX1bt9TCoX1F58QMIc46OpdkCHHWmRx1n5H3Z0uZHJlv269a5PBzkyNeixx+bnLEa5HDz02OeC3lsDMawuu5L9OD4TiCP4tDFKI=
+  </data>
+ </layer>
+ <layer name="green" width="50" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztz7ENACAMBLGUlJTsPylLRHyQ7AnuqgB4ZaUDmux0QBMfs/iY5aQDAAAAPnQBygoAcQ==
+  </data>
+ </layer>
+ <layer name="blue" width="50" height="30" visible="0">
+  <data encoding="base64" compression="zlib">
+   eJztyjEKACAMBMF8Q/3/P+0lQWwkxQxsdRdBV6sIAAAA+Gsk3fbzk5kPAdDfBtzOAtQ=
+  </data>
+ </layer>
+ <objectgroup name="crystals">
+  <object x="503" y="185">
+   <ellipse/>
+  </object>
+  <object x="1293" y="205">
+   <ellipse/>
+  </object>
+  <object x="285" y="608">
+   <ellipse/>
+  </object>
+  <object x="878" y="200">
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup name="player">
+  <object x="175" y="160">
+   <ellipse/>
+  </object>
+ </objectgroup>
+</map>

@@ -1,0 +1,21 @@
+
+emt.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+bar
+  rotate: false
+  xy: 1, 17
+  size: 219, 10
+  split: 4, 5, 0, 0
+  orig: 219, 10
+  offset: 0, 0
+  index: -1
+ball
+  rotate: false
+  xy: 222, 1
+  size: 26, 26
+  split: 0, 0, 0, 0
+  orig: 26, 26
+  offset: 0, 0
+  index: -1

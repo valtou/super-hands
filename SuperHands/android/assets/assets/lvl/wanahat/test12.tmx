@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="90" height="30" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="asd" tilewidth="32" tileheight="32">
+  <image source="blox.png" width="64" height="32"/>
+ </tileset>
+ <tileset firstgid="3" name="lataus" tilewidth="32" tileheight="32">
+  <image source="lataus.jpg" width="284" height="177"/>
+ </tileset>
+ <layer name="red" width="90" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt0TkOhEAQBMHh/59eH4dZjuRQpFQeglawjDEWs49tq9nnZjv7fXd9Y/YGzs0NnJs4N3Fu4tx0t/OVFpw5H33uSRX/8uwbODc3vNH5CXFu2uvM+784N3Fr4tzEuYlzE+cmzk2cmzg3cW7i3MS5iXPT2tnsC/sBFKICEQ==
+  </data>
+ </layer>
+ <layer name="green" width="90" height="30">
+  <data encoding="base64" compression="zlib">
+   eJzt0DENAAAIBDGCf9EsWOAX2uQMXBUA/NMbt3zO8DnD5wyfM3wGAAAAAACAfwYiTQAZ
+  </data>
+ </layer>
+ <layer name="blue" width="90" height="30">
+  <data encoding="base64" compression="zlib">
+   eJztwQENAAAAwqD3T20PBxQAAAAAAAAAAAAAzwYqMAAB
+  </data>
+ </layer>
+ <objectgroup name="crystals">
+  <object x="1848" y="662">
+   <ellipse/>
+  </object>
+  <object x="706" y="584">
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup name="player">
+  <object x="164" y="143">
+   <ellipse/>
+  </object>
+ </objectgroup>
+</map>

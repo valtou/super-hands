@@ -1,0 +1,54 @@
+
+amount.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+0x
+  rotate: false
+  xy: 0, 220
+  size: 200, 220
+  orig: 200, 220
+  offset: 0, 0
+  index: -1
+1x
+  rotate: false
+  xy: 0, 0
+  size: 200, 220
+  orig: 200, 220
+  offset: 0, 0
+  index: -1
+2x
+  rotate: false
+  xy: 200, 220
+  size: 200, 220
+  orig: 200, 220
+  offset: 0, 0
+  index: -1
+3x
+  rotate: false
+  xy: 200, 0
+  size: 200, 220
+  orig: 200, 220
+  offset: 0, 0
+  index: -1
+4x
+  rotate: false
+  xy: 400, 220
+  size: 200, 220
+  orig: 200, 220
+  offset: 0, 0
+  index: -1
+5x
+  rotate: false
+  xy: 400, 0
+  size: 200, 220
+  orig: 200, 220
+  offset: 0, 0
+  index: -1
+6x
+  rotate: false
+  xy: 600, 220
+  size: 200, 220
+  orig: 200, 220
+  offset: 0, 0
+  index: -1

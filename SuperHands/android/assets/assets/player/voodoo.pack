@@ -1,0 +1,47 @@
+
+voodoo.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+head
+  rotate: false
+  xy: 1, 8
+  size: 137, 138
+  orig: 137, 138
+  offset: 0, 0
+  index: -1
+body
+  rotate: false
+  xy: 140, 82
+  size: 56, 64
+  orig: 56, 64
+  offset: 0, 0
+  index: -1
+arm-b
+  rotate: false
+  xy: 198, 96
+  size: 28, 50
+  orig: 28, 50
+  offset: 0, 0
+  index: -1
+arm-f
+  rotate: false
+  xy: 198, 45
+  size: 26, 49
+  orig: 26, 49
+  offset: 0, 0
+  index: -1
+leg-b
+  rotate: false
+  xy: 140, 1
+  size: 30, 42
+  orig: 30, 42
+  offset: 0, 0
+  index: -1
+leg-f
+  rotate: false
+  xy: 172, 1
+  size: 30, 42
+  orig: 30, 42
+  offset: 0, 0
+  index: -1

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="26" height="16" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="asd" tilewidth="32" tileheight="32">
+  <image source="blox.png" width="64" height="32"/>
+ </tileset>
+ <tileset firstgid="3" name="platformertiles" tilewidth="32" tileheight="32">
+  <image source="platformertiles.png" width="256" height="96"/>
+ </tileset>
+ <layer name="red" width="26" height="16">
+  <data encoding="base64" compression="zlib">
+   eJzjYWBg4KETFgBiESKxEAX28DIQD7hH7Rm1BwiEGYhPm8iYVHvIBaP2jNoDs4cDiFlojOlVJwAAOKAJ/Q==
+  </data>
+ </layer>
+ <layer name="green" width="26" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUDARgp5M9/KP2DGp7xOlkz2AEAKpAAFs=
+  </data>
+ </layer>
+ <layer name="blue" width="26" height="16">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMAroDwAGgAAB
+  </data>
+ </layer>
+ <objectgroup name="crystals"/>
+ <objectgroup name="player">
+  <object x="247" y="189">
+   <ellipse/>
+  </object>
+ </objectgroup>
+</map>

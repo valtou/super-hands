@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" renderorder="right-down" width="32" height="20" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="asd" tilewidth="32" tileheight="32">
+  <image source="../blox.png" width="64" height="32"/>
+ </tileset>
+ <tileset firstgid="3" name="platformertiles" tilewidth="32" tileheight="32">
+  <image source="../platformertiles.png" width="256" height="96"/>
+ </tileset>
+ <layer name="red" width="32" height="20">
+  <data encoding="base64" compression="zlib">
+   eJzjYWBg4BlgLADEIjTAQnjMFkKyn5eBNoAbj9nco/YPe/uFgVh0AO3HBwaT/RxAzEImZqWC/ZSUP7jil1j7KTGDEgCzf6DAqP2j9g8G+8ktdyjFXAwD3+4CYQBGxgpd
+  </data>
+ </layer>
+ <layer name="green" width="32" height="20">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFo2AUjIJRMBIB2wDbzzdq/4i2X2yA7R/pAADdAABV
+  </data>
+ </layer>
+ <layer name="blue" width="32" height="20">
+  <data encoding="base64" compression="zlib">
+   eJztwQEBAAAAgiD/r25IQAEA8GQKAAAB
+  </data>
+ </layer>
+ <objectgroup name="crystals">
+  <object x="882" y="134">
+   <ellipse/>
+  </object>
+  <object x="690" y="421">
+   <ellipse/>
+  </object>
+  <object x="243" y="419">
+   <ellipse/>
+  </object>
+  <object x="458" y="199">
+   <ellipse/>
+  </object>
+ </objectgroup>
+ <objectgroup name="player">
+  <object x="175" y="148">
+   <ellipse/>
+  </object>
+ </objectgroup>
+</map>
