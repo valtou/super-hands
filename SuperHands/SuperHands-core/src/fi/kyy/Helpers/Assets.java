@@ -43,7 +43,7 @@ public class Assets {
 	public static Sprite rope;
 
 	public static TextureAtlas voodoo, robo, buttons, vines, worlds, coins,
-			worldslocked, amount;
+			worldslocked, amount, impulsesUp, impulsesRight, impulsesLeft;
 
 	public static TextureRegion coin, superHandsTitle, ropeJoint,
 			backgroundRegion;
@@ -65,6 +65,10 @@ public class Assets {
 			rightButton, backButton, worldButton, pauseButton, menuButton;
 
 	public static TextureRegion coin1, coin2, coin3, coin4;
+	
+	public static TextureRegion im0, im1, im2, im3, im4, im5, im6;
+	public static TextureRegion imr0, imr1, imr2, imr3, imr4, imr5, imr6;
+	public static TextureRegion iml0, iml1, iml2, iml3, iml4, iml5, iml6;
 
 	public static Sprite[] vine = new Sprite[4];
 	public static Sprite[] vineFlipped = new Sprite[4];
@@ -77,6 +81,7 @@ public class Assets {
 			settings, shop;
 
 	public static Animation coinAnimation;
+	public static Animation impulseUpAnimation, impulseRightAnimation, impulseLeftAnimation;
 
 	public static BitmapFont font;
 
@@ -158,6 +163,51 @@ public class Assets {
 
 		coinAnimation = new Animation(1 / 8f, coin1, coin2, coin3, coin4);
 		coinAnimation.setPlayMode(Animation.PlayMode.LOOP);
+		
+		// IMPULSE UP
+		
+		impulsesUp = new TextureAtlas("assets/impulse/impulseup.pack");
+		
+		im0 = new TextureRegion(impulsesUp.findRegion("0"));
+		im1 = new TextureRegion(impulsesUp.findRegion("1"));
+		im2 = new TextureRegion(impulsesUp.findRegion("2"));
+		im3 = new TextureRegion(impulsesUp.findRegion("3"));
+		im4 = new TextureRegion(impulsesUp.findRegion("4"));
+		im5 = new TextureRegion(impulsesUp.findRegion("5"));
+		im6 = new TextureRegion(impulsesUp.findRegion("6"));
+		
+		impulseUpAnimation = new Animation(1 / 8f, im0, im1, im2, im3, im4, im5, im6);
+		impulseUpAnimation.setPlayMode(Animation.PlayMode.LOOP);
+		
+		// IMPULSE RIGHT
+		
+		impulsesRight = new TextureAtlas("assets/impulse/impulseright.pack");
+		
+		imr0 = new TextureRegion(impulsesRight.findRegion("0"));
+		imr1 = new TextureRegion(impulsesRight.findRegion("1"));
+		imr2 = new TextureRegion(impulsesRight.findRegion("2"));
+		imr3 = new TextureRegion(impulsesRight.findRegion("3"));
+		imr4 = new TextureRegion(impulsesRight.findRegion("4"));
+		imr5 = new TextureRegion(impulsesRight.findRegion("5"));
+		imr6 = new TextureRegion(impulsesRight.findRegion("6"));
+		
+		impulseRightAnimation = new Animation(1 / 8f, imr0, imr1, imr2, imr3, imr4, imr5, imr6);
+		impulseRightAnimation.setPlayMode(Animation.PlayMode.LOOP);
+		
+		// IMPULSE LEFT
+		
+		impulsesLeft = new TextureAtlas("assets/impulse/impulseleft.pack");
+		
+		iml0 = new TextureRegion(impulsesLeft.findRegion("0"));
+		iml1 = new TextureRegion(impulsesLeft.findRegion("1"));
+		iml2 = new TextureRegion(impulsesLeft.findRegion("2"));
+		iml3 = new TextureRegion(impulsesLeft.findRegion("3"));
+		iml4 = new TextureRegion(impulsesLeft.findRegion("4"));
+		iml5 = new TextureRegion(impulsesLeft.findRegion("5"));
+		iml6 = new TextureRegion(impulsesLeft.findRegion("6"));
+		
+		impulseLeftAnimation = new Animation(1 / 8f, iml0, iml1, iml2, iml3, iml4, iml5, iml6);
+		impulseLeftAnimation.setPlayMode(Animation.PlayMode.LOOP);
 
 		coin = new TextureRegion(new Texture(
 				Gdx.files.internal("assets/coin/coin1.png")));

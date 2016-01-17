@@ -389,6 +389,7 @@ public class MainMenuScreen extends ScreenAdapter implements Screen,
 		ropeJointRight.setPosition(1280 * (logoBody.getPosition().x + 24) / 150
 				- ropeJointRight.getWidth() / 2, 768 * logoBody.getPosition().y
 				/ 90 - ropeJointRight.getHeight());
+		
 		ropeSwingBase.draw(batch);
 		ropeJointLeft.draw(batch);
 		ropeJointRight.draw(batch);

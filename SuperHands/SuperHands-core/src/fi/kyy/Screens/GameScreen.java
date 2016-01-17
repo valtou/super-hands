@@ -31,12 +31,14 @@ import com.badlogic.gdx.maps.MapLayer;
 import com.badlogic.gdx.maps.MapObject;
 import com.badlogic.gdx.maps.MapProperties;
 import com.badlogic.gdx.maps.objects.EllipseMapObject;
+import com.badlogic.gdx.maps.objects.RectangleMapObject;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer.Cell;
 import com.badlogic.gdx.maps.tiled.renderers.OrthogonalTiledMapRenderer;
 import com.badlogic.gdx.math.Ellipse;
 import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.Body;
@@ -132,8 +134,11 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 	public static final short BIT_BLUE = 16;
 	public static final short BIT_COIN = 32;
 
-	private ArrayList<Body> wallList = new ArrayList<Body>();
+	private ArrayList<Body> coinAmountList = new ArrayList<Body>();
 	private ArrayList<AnimatedSprite> coinSpriteList = new ArrayList<AnimatedSprite>();
+	private ArrayList<AnimatedSprite> impulseUpList = new ArrayList<AnimatedSprite>();
+	private ArrayList<AnimatedSprite> impulseRightList = new ArrayList<AnimatedSprite>();
+	private ArrayList<AnimatedSprite> impulseLeftList = new ArrayList<AnimatedSprite>();
 
 	private float distance = 1;
 
@@ -182,7 +187,15 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 	private Vector2 coinPosition;
 
 	private AnimatedSprite coinAnimation;
-
+	private AnimatedSprite impulseUpAnimation, impulseRightAnimation, impulseLeftAnimation;
+	
+	private boolean isInImpulseUp = false;
+	private float impulseForceUp = 0;
+	private boolean isInImpulseRight = false;
+	private float impulseForceRight = 0;
+	private boolean isInImpulseLeft = false;
+	private float impulseForceLeft = 0;
+	
 	@Override
 	public void show() {
 
@@ -491,6 +504,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 
 		TiledMapTileLayer layer;
 		MapLayer coinLayer;
+		MapLayer impulseLayer;
 
 		layer = (TiledMapTileLayer) tileMap.getLayers().get("red");
 		createLayer(layer, BIT_RED, 1);
@@ -500,6 +514,18 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 		createCoinLayer(coinLayer, BIT_RED);
 		layer = (TiledMapTileLayer) tileMap.getLayers().get("green");
 		createLayer(layer, BIT_RED, 3);
+		impulseLayer = (MapLayer) tileMap.getLayers().get("impulseup");
+		if (impulseLayer != null) {
+			createImpulseLayer(impulseLayer, BIT_RED, 1);
+		}
+		impulseLayer = (MapLayer) tileMap.getLayers().get("impulseright");
+		if (impulseLayer != null) {
+			createImpulseLayer(impulseLayer, BIT_RED, 2);
+		}
+		impulseLayer = (MapLayer) tileMap.getLayers().get("impulseleft");
+		if (impulseLayer != null) {
+			createImpulseLayer(impulseLayer, BIT_RED, 3);
+		}
 
 	}
 
@@ -541,14 +567,95 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 			body.setUserData("coin");
 			body.setActive(true);
 
-			wallList.add(body);
+			coinAmountList.add(body);
 
 		}
 
-		coinAmount = wallList.size();
+		coinAmount = coinAmountList.size();
 		PreferencesBean.setIntegerPreference("map" + Integer.toString(map)
 				+ "alllevelcoins", coinAmount);
 
+	}
+	
+	//up = 1, right = 2, left = 3
+	private void createImpulseLayer(MapLayer layer, short bits, int direction) {
+		wallDef = new BodyDef();
+		wallFDef = new FixtureDef();
+
+		for (MapObject mo : layer.getObjects()) {
+			wallDef.type = BodyType.StaticBody;
+			Rectangle e = null;
+
+			if (mo instanceof RectangleMapObject) {
+				e = ((RectangleMapObject) mo).getRectangle();
+				float x = e.x;
+				float y = e.y;
+
+				//coin = new Sprite(Assets.coin);
+				wallDef.position.set(x / (PPM - 4), y / (PPM - 4));
+
+				if (direction == 1) {
+					impulseUpAnimation = new AnimatedSprite(Assets.impulseUpAnimation);
+					impulseUpAnimation.setBounds(x / (PPM - 2), y / (PPM),
+							e.getWidth() / PPM, e.getHeight() / PPM);
+
+					impulseUpAnimation.setAutoUpdate(false);
+					impulseUpList.add(impulseUpAnimation);
+					PolygonShape shape = new PolygonShape();
+					shape.setAsBox(e.width / PPM / 2, e.height / PPM / 2);
+
+					wallFDef.shape = shape;
+					wallFDef.isSensor = true;
+					wallFDef.filter.categoryBits = BIT_RED;
+					wallFDef.filter.maskBits = BIT_PLAYER;
+
+					Body body = world.createBody(wallDef);
+					body.createFixture(wallFDef);
+					body.setUserData("impulseup");
+					body.setActive(true);
+				} else if (direction == 2) {
+					impulseRightAnimation = new AnimatedSprite(Assets.impulseRightAnimation);
+					impulseRightAnimation.setBounds(x / (PPM - 2), y / (PPM),
+							e.getWidth() / PPM, e.getHeight() / PPM);
+
+					impulseRightAnimation.setAutoUpdate(false);
+					impulseRightList.add(impulseRightAnimation);
+					PolygonShape shape = new PolygonShape();
+					shape.setAsBox(e.width / PPM / 2, e.height / PPM / 2);
+
+					wallFDef.shape = shape;
+					wallFDef.isSensor = true;
+					wallFDef.filter.categoryBits = BIT_RED;
+					wallFDef.filter.maskBits = BIT_PLAYER;
+
+					Body body = world.createBody(wallDef);
+					body.createFixture(wallFDef);
+					body.setUserData("impulseright");
+					body.setActive(true);
+				} else if (direction == 3) {
+					impulseLeftAnimation = new AnimatedSprite(Assets.impulseLeftAnimation);
+					impulseLeftAnimation.setBounds(x / (PPM - 2), y / (PPM),
+							e.getWidth() / PPM, e.getHeight() / PPM);
+
+					impulseLeftAnimation.setAutoUpdate(false);
+					impulseLeftList.add(impulseLeftAnimation);
+					PolygonShape shape = new PolygonShape();
+					shape.setAsBox(e.width / PPM / 2, e.height / PPM / 2);
+
+					wallFDef.shape = shape;
+					wallFDef.isSensor = true;
+					wallFDef.filter.categoryBits = BIT_RED;
+					wallFDef.filter.maskBits = BIT_PLAYER;
+
+					Body body = world.createBody(wallDef);
+					body.createFixture(wallFDef);
+					body.setUserData("impulseleft");
+					body.setActive(true);
+				}
+
+			}
+
+		}
 	}
 
 	private void createPlayerPosition(MapLayer layer) {
@@ -683,16 +790,28 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 		levelCamera.update();
 		camera.update();
 		stageCamera.update();
-
-		renderPlayer(rightArm, delta);
-
+		
 		batch.setProjectionMatrix(camera.combined);
 		batch.begin();
 		for (int i = 0; i < coinSpriteList.size(); i++) {
 			coinSpriteList.get(i).update(STEP);
 			coinSpriteList.get(i).draw(batch);
 		}
+		for (int i = 0; i < impulseUpList.size(); i ++) {
+			impulseUpList.get(i).update(STEP);
+			impulseUpList.get(i).draw(batch);
+		}
+		for (int i = 0; i < impulseRightList.size(); i ++) {
+			impulseRightList.get(i).update(STEP);
+			impulseRightList.get(i).draw(batch);
+		}
+		for (int i = 0; i < impulseLeftList.size(); i ++) {
+			impulseLeftList.get(i).update(STEP);
+			impulseLeftList.get(i).draw(batch);
+		}
 		batch.end();
+
+		renderPlayer(rightArm, delta);
 
 		batch.getProjectionMatrix().setToOrtho2D(0, 0, Gdx.graphics.getWidth(),
 				Gdx.graphics.getHeight());
@@ -718,6 +837,28 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 	public void renderPlayer(Body body, float delta) {
 
 		Vector2 pos = body.getWorldCenter();
+		
+		if (isInImpulseUp) {
+			impulseForceUp += 0.005f;
+			if (impulseForceUp > 0.2f) {
+				impulseForceUp = 0.2f;
+			}
+			body.applyLinearImpulse(0, impulseForceUp, body.getWorldCenter().x, body.getWorldCenter().y, true);
+		}
+		if (isInImpulseRight) {
+			impulseForceRight += 0.005f;
+			if (impulseForceRight > 0.2f) {
+				impulseForceRight = 0.2f;
+			}
+			body.applyLinearImpulse(impulseForceRight, 0, body.getWorldCenter().x, body.getWorldCenter().y, true);
+		}
+		if (isInImpulseLeft) {
+			impulseForceLeft += 0.005f;
+			if (impulseForceLeft > 0.2f) {
+				impulseForceLeft = 0.2f;
+			}
+			body.applyLinearImpulse(-impulseForceLeft, 0, body.getWorldCenter().x, body.getWorldCenter().y, true);
+		}
 
 		transform.setToTranslation(pos.x, pos.y, 0);
 		transform.rotate(0, 0, 1, ((float) ((Math.atan2(testPoint.x - pos.x,
@@ -743,13 +884,11 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 		updateSprite(spriteBody, torso);
 		spriteBody.draw(batch);
 		spriteHead.draw(batch);
-		batch.end();
 
 		if (distanceJoint != null && isHooked) {
 			renderRope(0.9f, 0.9f);
 		}
 
-		batch.begin();
 		updateSprite(spriteRightArm, rightArm);
 		spriteRightArm.draw(batch);
 		batch.end();
@@ -763,9 +902,6 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 
 		transform.setToTranslation(pos.x, pos.y, 0);
 		transform.rotate(0, 0, 1, (float) Math.toDegrees(angle));
-
-		batch.setProjectionMatrix(camera.combined);
-		batch.begin();
 
 		/*
 		 * hand = new Sprite(new Texture("img/arm-b.png"));
@@ -785,7 +921,6 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 				-(pos.y - testPoint.y)) * 180.0d / Math.PI) + 180.0f));
 		rope.setBounds(testPoint.x, testPoint.y, 0.9f, distance + 0.1f);
 		rope.draw(batch);
-		batch.end();
 
 	}
 
@@ -883,6 +1018,19 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 	public void beginContact(Contact contact) {
 		Fixture fa = contact.getFixtureA();
 		Fixture fb = contact.getFixtureB();
+		
+		if (fa.getBody().getUserData() == "impulseup"
+				|| fb.getBody().getUserData() == "impulseup") {
+			isInImpulseUp = true;
+		}
+		if (fa.getBody().getUserData() == "impulseright"
+				|| fb.getBody().getUserData() == "impulseright") {
+			isInImpulseRight = true;
+		}
+		if (fa.getBody().getUserData() == "impulseleft"
+				|| fb.getBody().getUserData() == "impulseleft") {
+			isInImpulseLeft = true;
+		}
 
 		if (fa.getBody().getUserData() == "wall"
 				&& fb.getBody().getUserData() == "player") {
@@ -896,7 +1044,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 
 		if (fb.getBody().getUserData() == "coin") {
 			System.out.println("Get coin");
-			int j = wallList.indexOf(fb.getBody());
+			int j = coinAmountList.indexOf(fb.getBody());
 			coinPosition = new Vector2(fb.getBody().getWorldCenter().x, fb
 					.getBody().getWorldCenter().y);
 			if (j >= 0) {
@@ -907,14 +1055,14 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 				coinSpriteList.remove(j);
 			}
 
-			wallList.remove(fb.getBody());
-			System.out.println("" + wallList.size());
+			coinAmountList.remove(fb.getBody());
+			System.out.println("" + coinAmountList.size());
 
 		}
 
 		if (fa.getBody().getUserData() == "coin") {
 			System.out.println("Get coin");
-			int j = wallList.indexOf(fa.getBody());
+			int j = coinAmountList.indexOf(fa.getBody());
 			coinPosition = new Vector2(fa.getBody().getWorldCenter().x, fa
 					.getBody().getWorldCenter().y);
 			if (j >= 0) {
@@ -925,8 +1073,8 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 				coinSpriteList.remove(j);
 			}
 
-			wallList.remove(fa.getBody());
-			System.out.println("" + wallList.size());
+			coinAmountList.remove(fa.getBody());
+			System.out.println("" + coinAmountList.size());
 
 		}
 
@@ -967,7 +1115,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 			PreferencesBean.setBooleanPreference(Integer.toString(map)
 					+ "played", true);
 
-			totalCoins = coinAmount - wallList.size();
+			totalCoins = coinAmount - coinAmountList.size();
 
 			if (totalCoins > PreferencesBean.getIntegerPreference("map"
 					+ Integer.toString(map) + "totalcoins", 0)) {
@@ -982,10 +1130,10 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 				allCoins += PreferencesBean.getIntegerPreference("map" + i
 						+ "totalcoins", 0);
 			}
-			if (allCoins > 100 - 10) {
+			if (allCoins >= 90) {
 				PreferencesBean.setBooleanPreference("waterUnlocked", true);
 			}
-			if (map == 60) {
+			if (allCoins >= 180) {
 				PreferencesBean.setBooleanPreference("volcanoUnlocked", true);
 			}
 			paused = true;
@@ -1084,11 +1232,13 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 
 		TextureAtlas atlas = new TextureAtlas("assets/uiskin.atlas");
 		skin = new Skin(Gdx.files.internal("assets/uiskin.json"), atlas);
-
+		
+		//TODO jos kenttä yli 30 niin water ja yli 60 niin volcano
 		worldID = new Label("THE FOREST", style);
 		worldID.setFontScale(.6f);
 		// worldID.setPosition(800 / 2 - 130, 260);
 
+		//TODO kentän numero alkaa alusta jos eri world
 		levelID = new Label("LEVEL: " + Integer.toString(map), style);
 		levelID.setFontScale(.5f);
 		// levelID.setPosition(800 / 2 - 130, 220);
@@ -1483,6 +1633,24 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 	@Override
 	public void endContact(Contact contact) {
 		// TODO Auto-generated method stub
+		Fixture fa = contact.getFixtureA();
+		Fixture fb = contact.getFixtureB();
+		
+		if (fa.getBody().getUserData() == "impulseup"
+				|| fb.getBody().getUserData() == "impulseup") {
+			isInImpulseUp = false;
+			impulseForceUp = 0;
+		}
+		if (fa.getBody().getUserData() == "impulseright"
+				|| fb.getBody().getUserData() == "impulseright") {
+			isInImpulseRight = false;
+			impulseForceRight = 0;
+		}
+		if (fa.getBody().getUserData() == "impulseleft"
+				|| fb.getBody().getUserData() == "impulseleft") {
+			isInImpulseLeft = false;
+			impulseForceLeft = 0;
+		}
 
 	}
 

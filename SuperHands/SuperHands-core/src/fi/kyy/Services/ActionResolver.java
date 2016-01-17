@@ -1,6 +1,7 @@
 package fi.kyy.Services;
 
 public interface ActionResolver {
+	
 	public boolean getSignedInGPGS();
 
 	public void loginGPGS();
@@ -24,6 +25,5 @@ public interface ActionResolver {
 	public boolean getVolcanoUnlocked();
 	
 	public void openFacebook();
-	
 	
 }
