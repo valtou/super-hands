@@ -59,7 +59,7 @@ public class Assets {
 			achievementsButton, shopButton, exitButton, facebookButton,
 			achievementsButton_big, shopButton_big, playButton_small,
 			menuButton_small, retryButton_small, nextButton_small,
-			retryButton_small1;
+			retryButton_small1, goBackButton_small1;
 
 	public static AtlasSprite modeButton, characterButton, leftButton,
 			rightButton, backButton, worldButton, pauseButton, menuButton;
@@ -237,6 +237,8 @@ public class Assets {
 				buttons.findRegion("retrybutton_small"));
 		retryButton_small1 = new AtlasSprite(
 				buttons.findRegion("retrybutton_small"));
+		goBackButton_small1 = new AtlasSprite(
+				buttons.findRegion("menubutton_small"));
 		nextButton_small = new AtlasSprite(
 				buttons.findRegion("nextbutton_small"));
 

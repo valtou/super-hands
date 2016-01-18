@@ -5,6 +5,7 @@ import static fi.kyy.Handlers.B2DVars.PPM;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+import sun.rmi.runtime.Log;
 import aurelienribon.tweenengine.BaseTween;
 import aurelienribon.tweenengine.Timeline;
 import aurelienribon.tweenengine.Tween;
@@ -152,7 +153,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 
 	Body removeBody = null;
 
-	private boolean release, start, timeStarted, playFinished, playDead;
+	private boolean release, start = true, timeStarted, playFinished, playDead;
 	private long startTime, totalTime;
 	private double seconds;
 
@@ -164,9 +165,9 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 	private Table container;
 	private Skin skin;
 
-	private boolean paused = false;
+	private boolean paused;
 
-	private Image gameRetryButton, menuButton, retryButton, nextButton;
+	private Image gameRetryButton, menuButton, retryButton, nextButton, goBackButton;
 
 	private float scale = Gdx.graphics.getWidth() / 800;
 
@@ -206,6 +207,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 
 		release = false;
 		start = true;
+		paused = false;
 		timeStarted = false;
 
 		tweenManager = new TweenManager();
@@ -268,10 +270,44 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 		black.setBounds(0, 0, 1280, 768);
 		black.setCenterPosition(1280 / 2, 768 / 2);
 		black.addActor(new Image(Assets.black));
+		
+		goBackButton = new Image(Assets.goBackButton_small1);
+		goBackButton.setX(20);
+		goBackButton.setY(480 - goBackButton.getHeight() - 10);
+		goBackButton.setScale(1f);
+		goBackButton.addListener(new InputListener() {
+			public boolean touchDown(InputEvent event, float x, float y,
+					int pointer, int button) {
+				goBackButton.setScale(0.96f * goBackButton.getScaleX());
+				Assets.playSound(Assets.buttonSound);
+				return true;
+			}
+
+			public void touchUp(InputEvent event, float x, float y,
+					int pointer, int button) {
+				goBackButton.setScale(1f);
+				if (PreferencesBean.getBooleanPreferences("adsOff", false) == false) {
+					SuperHands.actionResolver.displayInterstitial();
+				}
+				if (WorldMenuScreen.world == 1) {
+					Assets.pauseMusic(Assets.forestTheme);
+				}
+				if (WorldMenuScreen.world == 2) {
+					Assets.pauseMusic(Assets.waterTheme);
+				}
+				if (WorldMenuScreen.world == 3) {
+					Assets.pauseMusic(Assets.volcanoTheme);
+				}
+				paused = false;
+				isHooked = false;
+				((SuperHands) Gdx.app.getApplicationListener())
+						.setScreen(new LevelSelectScreen());
+			}
+		});
 
 		gameRetryButton = new Image(Assets.retryButton_small1);
 		gameRetryButton.setX(20);
-		gameRetryButton.setY(480 - gameRetryButton.getHeight() - 20);
+		gameRetryButton.setY(480 - gameRetryButton.getHeight() - 20 - goBackButton.getHeight());
 		gameRetryButton.setScale(1f);
 		gameRetryButton.addListener(new InputListener() {
 			public boolean touchDown(InputEvent event, float x, float y,
@@ -293,6 +329,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 		});
 
 		stage.addActor(black);
+		stage.addActor(goBackButton);
 		stage.addActor(gameRetryButton);
 
 		InputMultiplexer multiplexer = new InputMultiplexer();
@@ -305,7 +342,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 		cb = new TweenCallback() {
 			@Override
 			public void onEvent(int type, BaseTween<?> source) {
-				start = false;
+				//start = false;
 			}
 		};
 
@@ -591,7 +628,6 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 				float x = e.x;
 				float y = e.y;
 
-				//coin = new Sprite(Assets.coin);
 				wallDef.position.set(x / PPM + e.width / PPM / 2, y / PPM + e.height / PPM / 2);
 
 				if (direction == 1) {
@@ -728,10 +764,12 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 	@Override
 	public void render(float delta) {
 
+		System.out.println("*** " + start);
+		
 		if (!paused) {
 			world.step(STEP * 1.2f, 8, 3);
 			if (start) {
-				world.setGravity(new Vector2(0, -0.2f));
+				world.setGravity(new Vector2(0, 0f));
 			} else {
 				if (timeStarted == false) {
 					startTime = System.nanoTime();
@@ -822,9 +860,11 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 			finishedStage.draw();
 		}
 
-		font.setScale(0.1f + scale * 0.65f);
-		finalTime = df.format(seconds);
-		font.draw(batch, " " + finalTime, 4, 30 * scale * 1.1f);
+		if (!start) {
+			font.setScale(0.1f + scale * 0.65f);
+			finalTime = df.format(seconds);
+			font.draw(batch, " " + finalTime, 4, 30 * scale * 1.1f);	
+		}
 		batch.end();
 		tweenManager.update(delta);
 		stage.act(delta);
@@ -979,6 +1019,10 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		
+		if (paused) {
+			return false;
+		}
 
 		testPoint.set(screenX, screenY, 0);
 		camera.unproject(testPoint);
@@ -1001,7 +1045,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 
 	@Override
 	public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
+		start = false;
 		return false;
 
 	}
