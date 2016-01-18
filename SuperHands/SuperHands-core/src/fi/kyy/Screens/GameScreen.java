@@ -592,12 +592,12 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 				float y = e.y;
 
 				//coin = new Sprite(Assets.coin);
-				wallDef.position.set(x / (PPM - 4), y / (PPM - 4));
+				wallDef.position.set(x / PPM + e.width / PPM / 2, y / PPM + e.height / PPM / 2);
 
 				if (direction == 1) {
 					impulseUpAnimation = new AnimatedSprite(Assets.impulseUpAnimation);
-					impulseUpAnimation.setBounds(x / (PPM - 2), y / (PPM),
-							e.getWidth() / PPM, e.getHeight() / PPM);
+					impulseUpAnimation.setBounds(wallDef.position.x - e.width / PPM / 2, wallDef.position.y - e.height / PPM / 2,
+							e.width / PPM, e.height / PPM);
 
 					impulseUpAnimation.setAutoUpdate(false);
 					impulseUpList.add(impulseUpAnimation);
@@ -615,8 +615,8 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 					body.setActive(true);
 				} else if (direction == 2) {
 					impulseRightAnimation = new AnimatedSprite(Assets.impulseRightAnimation);
-					impulseRightAnimation.setBounds(x / (PPM - 2), y / (PPM),
-							e.getWidth() / PPM, e.getHeight() / PPM);
+					impulseRightAnimation.setBounds(wallDef.position.x - e.width / PPM / 2, wallDef.position.y - e.height / PPM / 2,
+							e.width / PPM, e.height / PPM);
 
 					impulseRightAnimation.setAutoUpdate(false);
 					impulseRightList.add(impulseRightAnimation);
@@ -634,8 +634,8 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 					body.setActive(true);
 				} else if (direction == 3) {
 					impulseLeftAnimation = new AnimatedSprite(Assets.impulseLeftAnimation);
-					impulseLeftAnimation.setBounds(x / (PPM - 2), y / (PPM),
-							e.getWidth() / PPM, e.getHeight() / PPM);
+					impulseLeftAnimation.setBounds(wallDef.position.x - e.width / PPM / 2, wallDef.position.y - e.height / PPM / 2,
+							e.width / PPM, e.height / PPM);
 
 					impulseLeftAnimation.setAutoUpdate(false);
 					impulseLeftList.add(impulseLeftAnimation);
@@ -824,7 +824,7 @@ public class GameScreen extends ScreenAdapter implements InputProcessor,
 
 		font.setScale(0.1f + scale * 0.65f);
 		finalTime = df.format(seconds);
-		font.draw(batch, "Time: " + finalTime, 4, 30 * scale * 1.1f);
+		font.draw(batch, " " + finalTime, 4, 30 * scale * 1.1f);
 		batch.end();
 		tweenManager.update(delta);
 		stage.act(delta);
